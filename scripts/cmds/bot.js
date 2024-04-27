@@ -223,6 +223,4 @@ config: {
                 \n\n                       🌸===『*★𝗖𝗿𝗲𝗱𝗶𝘁'𝘀 𒁍देव बाबू`
     }
     return api.sendMessage(msg, threadID, messageID);
-  }
-}
 };
