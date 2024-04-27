@@ -26,7 +26,7 @@ module.exports.handleEvent = async function({ api, event, args, Threads, Users }
   
    mess = "{name}"
   
-  if (event.body.indexOf("BOT") == 0 || (event.body.indexOf("BABU") == 0)) {
+  if (event.body.indexOf("BOT") == 0 || (event.body.indexOf("babu") == 0)) {
     var msg = {
       body: `🍁🌼🌹 ${name} 🌹🌼🍁\n\n 👉
       
@@ -35,7 +35,7 @@ module.exports.handleEvent = async function({ api, event, args, Threads, Users }
       
       
       
-      🌸===『*★𝗖𝗿𝗲𝗱𝗶𝘁'𝘀 𒁍देव बाबू`
+      🌸===『*★𝗖𝗿𝗲𝗱𝗶𝘁'𝘀 𒁍dev बाबू`
     }
     return api.sendMessage(msg, threadID, messageID);
   };
