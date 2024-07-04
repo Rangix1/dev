@@ -1,54 +1,76 @@
 const axios = require('axios');
-
-const Prefixes = [
-  '/ai',
-  'kim',
-  'Nemo',
-  '+ai',
-  'nemo',
-  'ai',
-  'ask',
-];
+const tracker = {};
 
 module.exports = {
   config: {
-    name: "ask",
-    version: 1.0,
-    author: "OtinXSandip",
-    longDescription: "AI",
-    category: "ai",
-    guide: {
-      en: "{p} questions",
-    },
+    name: "bard2",
+    version: "1.0",
+    author: "Samir Œ",
+    countDown: 5,
+    role: 0,
+    longDescription: "gpt",
+    category: "𝗔𝗜",
+    guide: { en: "{pn} <query>" },
   },
-  onStart: async function () {},
-  onChat: async function ({ api, event, args, message }) {
-    try {
-      
-      const prefix = Prefixes.find((p) => event.body && event.body.toLowerCase().startsWith(p));
-      if (!prefix) {
-        return; // Invalid prefix, ignore the command
-      }
-      const prompt = event.body.substring(prefix.length).trim();
-   if (!prompt) {
-        await message.reply("salut je suis le bot de Stanley et barro🦥");
-        return;
-      }
+  clearHistory: function () {
+    global.GoatBot.onReply.clear();
+  },
+  onStart: async function ({ message, event, args, usersData }) {
+    const prompt = args.join(' ');
+    const userName = await usersData.getName(event.senderID);
+    const userID = event.senderID;
 
+    if (!args[0]) return message.reply('Please enter a query.');
 
-      const response = await axios.get(`https://sandipbaruwal.onrender.com/gpt?prompt=${encodeURIComponent(prompt)}`);
-      const answer = response.data.answer;
-
- 
-    await message.reply({ body: `dev's ai🐱
-━━━━━━━━━━━━━        
-${answer}
-━━━━━━━━━━━━━
-dost 😐`,
-});
-
-   } catch (error) {
-      console.error("Error:", error.message);
+    if (args[0] === 'clear') {
+      this.clearHistory();
+      const c = await clean(userID);
+      if (c) return message.reply('Conversation history cleared.');
     }
+    // Use command name directly from the config object
+    await gpt(prompt, userID, message, userName, this.config.name.toLowerCase());
+  },
+
+  onReply: async function ({ Reply, message, event, args, getLang, usersData }) {
+    const { author } = Reply;
+    if (author !== event.senderID) return;
+    const prompt = args.join(' ');
+    const userID = event.senderID;
+    const userName = await usersData.getName(event.senderID);
+    await gpt(prompt, userID, message, userName, this.config.name.toLowerCase());
   }
 };
+
+async function clean(userID) {
+  if (tracker[userID]) {
+    delete tracker[userID];
+    return true;
+  }
+  return false;
+}
+
+async function gpt(text, userID, message, userName, commandName) {
+  if (!tracker[userID]) {
+    tracker[userID] = `${userName}.\n`;
+  }
+  tracker[userID] += `${text}.\n`;
+
+  try {
+    const query = `- Current prompt: ${text}\n\n - Conversation:\n${tracker[userID]}\n`;
+    const url = `https://samirxpikachu.onrender.com/liner?prompt=${encodeURIComponent(query)}`;
+    const response = await axios.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const resultText = response.data.answer;
+    tracker[userID] += `${resultText}`;
+    await message.reply(`${resultText}\n`, (error, info) => {
+      global.GoatBot.onReply.set(info.messageID, {
+        commandName: commandName, author: userID
+      });
+    });
+  } catch (error) {
+    message.reply("An error occurred.");
+  }
+  }
