@@ -3,7 +3,7 @@ const tracker = {};
 
 module.exports = {
   config: {
-    name: "bard2",
+    name: "ai",
     version: "1.0",
     author: "Samir Œ",
     countDown: 5,
