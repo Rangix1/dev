@@ -8,7 +8,7 @@ module.exports = {
 
   config: {
 
-    name: "bard",
+    name: "ai",
 
     version: "1.0",
 
