@@ -1,299 +1,76 @@
-const axios = require("axios");
-
-const fs = require("fs");
-
-
+const axios = require('axios');
+const tracker = {};
 
 module.exports = {
-
   config: {
-
     name: "bard2",
-
     version: "1.0",
-
-    author: "rehat--",
-
+    author: "Samir Œ",
     countDown: 5,
-
     role: 0,
-
-    longDescription: { en: "Artificial Intelligence Google Bard" },
-
+    longDescription: "gpt",
+    category: "𝗔𝗜",
     guide: { en: "{pn} <query>" },
-
-    category: "ai",
-
   },
-
   clearHistory: function () {
-
     global.GoatBot.onReply.clear();
-
   },
+  onStart: async function ({ message, event, args, usersData }) {
+    const prompt = args.join(' ');
+    const userName = await usersData.getName(event.senderID);
+    const userID = event.senderID;
 
+    if (!args[0]) return message.reply('Please enter a query.');
 
-
-  onStart: async function ({ message, event, args, api, commandName }) {
-
-    const uid = event.senderID;
-
-    const prompt = args.join(" ");
-
-
-
-    if (!prompt) {
-
-      message.reply("Please enter a query.");
-
-      return;
-
-    }
-
-
-await message.reply("Answering your question. Please wait a moment...");
-
-
-    if (prompt.toLowerCase() === "clear") {
-
+    if (args[0] === 'clear') {
       this.clearHistory();
-
-      const clear = await axios.get(`https://project-bard.onrender.com/api/bard?query=clear&uid=${uid}`);
-
-      message.reply(clear.data.message);
-
-      return;
-
+      const c = await clean(userID);
+      if (c) return message.reply('Conversation history cleared.');
     }
-
-
-
-    if (event.type === "message_reply" && event.messageReply.attachments && event.messageReply.attachments[0].type === "photo") {
-
-      const photo = encodeURIComponent(event.messageReply.attachments[0].url);
-
-      const query = args.join(" ");
-
-      const url = `https://turtle-apis.onrender.com/api/gemini/img?prompt=${encodeURIComponent(query)}&url=${photo}`;
-
-      const response = await axios.get(url);
-
-      message.reply(response.data.answer);
-
-      return;
-
-    }
-
-
-
-    const apiUrl = `https://project-bard.onrender.com/api/bard?query=${encodeURIComponent(prompt)}&uid=${uid}`;
-
-    try {
-
-      const response = await axios.get(apiUrl);
-
-      const result = response.data;
-
-
-
-      let content = result.message;
-
-      let imageUrls = result.imageUrls;
-
-
-
-      let replyOptions = {
-
-        body: content,
-
-      };
-
-
-
-      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
-
-        const imageStreams = [];
-
-
-
-        if (!fs.existsSync(`${__dirname}/cache`)) {
-
-          fs.mkdirSync(`${__dirname}/cache`);
-
-        }
-
-
-
-        for (let i = 0; i < imageUrls.length; i++) {
-
-          const imageUrl = imageUrls[i];
-
-          const imagePath = `${__dirname}/cache/image` + (i + 1) + ".png";
-
-
-
-          try {
-
-            const imageResponse = await axios.get(imageUrl, {
-
-              responseType: "arraybuffer",
-
-            });
-
-            fs.writeFileSync(imagePath, imageResponse.data);
-
-            imageStreams.push(fs.createReadStream(imagePath));
-
-          } catch (error) {
-
-            console.error("Error occurred while downloading and saving the image:", error);
-
-            message.reply('An error occurred.');
-
-          }
-
-        }
-
-
-
-        replyOptions.attachment = imageStreams;
-
-      }
-
-
-
-      message.reply(replyOptions, (err, info) => {
-
-        if (!err) {
-
-          global.GoatBot.onReply.set(info.messageID, {
-
-            commandName,
-
-            messageID: info.messageID,
-
-            author: event.senderID,
-
-          });
-
-        }
-
-      });
-
-    } catch (error) {
-
-      message.reply('An error occurred.');
-
-      console.error(error.message);
-
-    }
-
+    // Use command name directly from the config object
+    await gpt(prompt, userID, message, userName, this.config.name.toLowerCase());
   },
 
-
-
-  onReply: async function ({ message, event, Reply, args }) {
-
-    const prompt = args.join(" ");
-
-    let { author, commandName, messageID } = Reply;
-
-    if (event.senderID !== author) return;
-
-
-
-    try {
-
-      const apiUrl = `https://project-bard.onrender.com/api/bard?query=${encodeURIComponent(prompt)}&uid=${author}`;
-
-      const response = await axios.get(apiUrl);
-
-
-
-      let content = response.data.message;
-
-      let replyOptions = {
-
-        body: content,
-
-      };
-
-
-
-      const imageUrls = response.data.imageUrls;
-
-      if (Array.isArray(imageUrls) && imageUrls.length > 0) {
-
-        const imageStreams = [];
-
-
-
-        if (!fs.existsSync(`${__dirname}/cache`)) {
-
-          fs.mkdirSync(`${__dirname}/cache`);
-
-        }
-
-        for (let i = 0; i < imageUrls.length; i++) {
-
-          const imageUrl = imageUrls[i];
-
-          const imagePath = `${__dirname}/cache/image` + (i + 1) + ".png";
-
-
-
-          try {
-
-            const imageResponse = await axios.get(imageUrl, {
-
-              responseType: "arraybuffer",
-
-            });
-
-            fs.writeFileSync(imagePath, imageResponse.data);
-
-            imageStreams.push(fs.createReadStream(imagePath));
-
-          } catch (error) {
-
-            console.error("Error occurred while downloading and saving the image:", error);
-
-            message.reply('An error occurred.');
-
-          }
-
-        }
-
-        replyOptions.attachment = imageStreams;
-
-      }
-
-      message.reply(replyOptions, (err, info) => {
-
-        if (!err) {
-
-          global.GoatBot.onReply.set(info.messageID, {
-
-            commandName,
-
-            messageID: info.messageID,
-
-            author: event.senderID,
-
-          });
-
-        }
-
-      });
-
-    } catch (error) {
-
-      console.error(error.message);
-
-      message.reply("An error occurred.");
-
-    }
-
-  },
-
+  onReply: async function ({ Reply, message, event, args, getLang, usersData }) {
+    const { author } = Reply;
+    if (author !== event.senderID) return;
+    const prompt = args.join(' ');
+    const userID = event.senderID;
+    const userName = await usersData.getName(event.senderID);
+    await gpt(prompt, userID, message, userName, this.config.name.toLowerCase());
+  }
 };
+
+async function clean(userID) {
+  if (tracker[userID]) {
+    delete tracker[userID];
+    return true;
+  }
+  return false;
+}
+
+async function gpt(text, userID, message, userName, commandName) {
+  if (!tracker[userID]) {
+    tracker[userID] = `${userName}.\n`;
+  }
+  tracker[userID] += `${text}.\n`;
+
+  try {
+    const query = `- Current prompt: ${text}\n\n - Conversation:\n${tracker[userID]}\n`;
+    const url = `https://samirxpikachu.onrender.com/liner?prompt=${encodeURIComponent(query)}`;
+    const response = await axios.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const resultText = response.data.answer;
+    tracker[userID] += `${resultText}`;
+    await message.reply(`${resultText}\n`, (error, info) => {
+      global.GoatBot.onReply.set(info.messageID, {
+        commandName: commandName, author: userID
+      });
+    });
+  } catch (error) {
+    message.reply("An error occurred.");
+  }
+  }
