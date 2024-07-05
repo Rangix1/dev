@@ -1,70 +1,82 @@
-const axios = require("axios");
-const fs = require("fs").promises;
-const path = require("path");
-
-const geminiApiUrl = "https://gemini.easy-api.online/v1/completion"; 
+const axios = require('axios');
 
 module.exports = {
   config: {
     name: "gemini",
-    version: 1.0,
-    author: "Eldwin",
-    longDescription: "AI",
+    aliases: ['ai', 'Ai','Gemini','AI'],
+    version: 2.0,
+    author: "OtinXSandip",
+    description: "ai",
+    role: 0,
     category: "ai",
     guide: {
-      en: "ai questions",
+      en: "{p}{n} <Query>",
     },
   },
-  onStart: async function ({ api, event, args, message }) {
+  onStart: async function ({ message, usersData, event, api, args }) {
     try {
-      const text = args.join(" ");
-      if (!text) {
-        return api.sendMessage("Please provide a question or query", event.threadID, event.messageID);
+      if (event.type === "message_reply" && event.messageReply.attachments && event.messageReply.attachments[0].type === "photo") {
+        const photoUrl = encodeURIComponent(event.messageReply.attachments[0].url);
+        const lado = args.join(" ");
+        const url = `https://sandipbaruwal.onrender.com/gemini2?prompt=${encodeURIComponent(lado)}&url=${photoUrl}`;
+        const response = await axios.get(url);
+
+        message.reply(response.data.answer);
+        return;
       }
 
-      let imageBase64Array = [];
+      const id = event.senderID;
+      const userData = await usersData.get(id);
+      const name = userData.name;
 
-      if (event.type === "message_reply" && event.messageReply.attachments && event.messageReply.attachments.length > 0) {
-        const attachments = event.messageReply.attachments;
+      const ment = [{ id: id, tag: name }];
+      const prompt = args.join(" ");
+      const encodedPrompt = encodeURIComponent(prompt);
+      api.setMessageReaction("⏳", event.messageID, () => { }, true);
+      const res = await axios.get(`https://sandipbaruwal.onrender.com/gemini?prompt=${encodedPrompt}`);
+      const result = res.data.answer;
 
-        imageBase64Array = await Promise.all(attachments.map(async (attachment) => {
-          if (attachment.type === "photo" || attachment.type === "animated_image" || attachment.type === "video") {
-            const imageData = await downloadAndSaveImage(attachment.url, attachment.type);
-            return imageData;
-          }
-        }));
-      }
-
-      const response = await axios.post(geminiApiUrl, {
-        prompt: text,
-        imageBase64Array,
+      api.setMessageReaction("✅", event.messageID, () => { }, true);
+      message.reply({
+        body: `${name}, ${result}`,
+        mentions: ment,
+      }, (err, info) => {
+        global.GoatBot.onReply.set(info.messageID, {
+          commandName: this.config.name,
+          messageID: info.messageID,
+          author: event.senderID
+        });
       });
-
-      const data = response.data.content;
-
-      api.sendMessage(data, event.threadID, event.messageID);
     } catch (error) {
-      console.error(error);
-      api.sendMessage("An error occurred while processing the command.", event.threadID);
+      console.error("Error:", error.message);
     }
   },
-};
+  onReply: async function ({ message, event, Reply, args, api, usersData }) {
+    try {
+      const id = event.senderID;
+      const userData = await usersData.get(id);
+      const name = userData.name;
 
-async function downloadAndSaveImage(imageUrl, imageType) {
-  try {
-    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-    const imageBuffer = Buffer.from(response.data);
-    
-    const fileExtension = imageType === "video" ? "mp4" : "png";
-    const fileName = `gemini_${Date.now()}.${fileExtension}`;
+      const ment = [{ id: id, tag: name }];
+      const prompt = args.join(" ");
+      const encodedPrompt = encodeURIComponent(prompt);
+      api.setMessageReaction("⏳", event.messageID, () => { }, true);
+      const res = await axios.get(`https://sandipbaruwal.onrender.com/gemini?prompt=${encodedPrompt}`);
+      const result = res.data.answer;
 
-    const imagePath = path.join(__dirname, "cache", fileName);
-    await fs.writeFile(imagePath, imageBuffer);
-
-    const imageData = await fs.readFile(imagePath, { encoding: "base64" });
-    return imageData;
-  } catch (error) {
-    console.error("Error downloading and saving image:", error);
-    throw error;
-  }
+      api.setMessageReaction("✅", event.messageID, () => { }, true);
+      message.reply({
+        body: `${name}, ${result}`,
+        mentions: ment,
+      }, (err, info) => {
+        global.GoatBot.onReply.set(info.messageID, {
+          commandName: this.config.name,
+          messageID: info.messageID,
+          author: event.senderID
+        });
+      });
+    } catch (error) {
+      console.error("Error:", error.message);
     }
+  }
+};
