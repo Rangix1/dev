@@ -1,147 +1,191 @@
 {
-  "facebookAccount": {
-    "email": "royvashu734@gmail.com",
-    "password": "monkey@1234",
-    "2FASecret": "",
-    "i_user": "",
-    "proxy": null,
-    "userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36",
-    "intervalGetNewCookie": 1440,
-    "notes": "time the system automatically retrieves new cookies from email/password, unit is minute, if you set null, the system will not automatically retrieve new cookies, it saves you from having to manually change your cookie every time it expires. recommended set to 1440 (1day) or 4320 (3day).TO BE ABLE TO USE THIS FEATURE YOU NEED TO ENTER THE ACCOUNT PASSWORD ABOVE"
-  },
-  "antiInbox": false,
-  "language": "en",
-  "notesLanguage": "change to your language with ISO 639-1 code, available languages: vi (Vietnamese), en (English)",
-  "adminOnly": {
-    "enable": false,
-    "ignoreCommand": []
-  },
-  "adminBot": [
-    "61550558518720"
-  ],
-  "whiteListMode": {
-    "enable": false,
-    "whiteListIds": [],
-    "notes": "if you enable this feature, only the ids in the whiteListIds section can use the bot"
-  },
-  "nickNameBot": "🅓︎🅔︎🅥︎ ki  🅑︎🅞︎🅣︎ hu シ︎",
-  "prefix": "+",
-  "database": {
-    "type": "sqlite",
-    "uriMongodb": "",
-    "autoSyncWhenStart": false,
-    "autoRefreshThreadInfoFirstTime": true,
-    "notes": "(1) type selects 'json' or 'sqlite' or 'mongodb'. If you choose mongodb, enter uri connect mongodb in the uriMongodb section, instructions to get uri connect mongodb at: https://youtu.be/z1f9urHW5xY. I recommend using 'mongodb' or 'sqlite', json is not recommended because it is not stable. (2) when you set autoSyncWhenStart to true, the bot will automatically synchronize the data in the database when starting the bot, this will make the bot start slower. (3) when you set autoRefreshThreadInfoFirstTime to true, the bot will automatically refresh the thread information when get first message from the thread since starting the bot"
-  },
-  "timeZone": "Asia/Ho_Chi_Minh",
-  "credentials": {
-    "gmailAccount": {
-      "email": "kramn1205@gmail.com",
-      "clientId": "407168939339-ni7uvp8054bpnht4280n6d3no4qrf3mv.apps.googleusercontent.com",
-      "clientSecret": "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",
-      "refreshToken": "1//041Aj0DBzlyxuCgYIARAAGAQSNwF-L9IrSJFfXahDmIC5CaNNthQwg0yT8ZrFaUUofZBR13qsh-nNBLi7_4LZMlZ00F8AiWo6Moo",
-      "apiKey": ""
-    },
-    "gRecaptcha": {
-      "siteKey": "6LdtgYMoAAAAABS1V6_RlEsUXf7dNLIzbc4EPhbt",
-      "secretKey": "6LdtgYMoAAAAAKXtH5f06qZBq28VXXqOb6rOSGQ5"
-    }
-  },
-  "dashBoard": {
-    "enable": true,
-    "expireVerifyCode": 300000,
-    "port": 3001
-  },
-  "serverUptime": {
-    "enable": false,
-    "port": 3001,
-    "socket": {
-      "enable": true,
-      "channelName": "uptime",
-      "verifyToken": ""
-    }
-  },
-  "autoRestart": {
-    "time": null,
-    "notes": "you can set time is interval with milisecond or cron time, example: 1000, 10000, 60000, 3600000, 86400000, 0 0 * * *,... docs: https://www.npmjs.com/package/node-cron. If you set time is 0 or false or null, the bot will not auto restart"
-  },
-  "autoUptime": {
-    "enable": false,
-    "timeInterval": 180,
-    "url": "",
-    "notes": "the value of timeInterval is seconds, url is the url you want to send the request to (automatically detected for hosting glitch or replit)"
-  },
-  "autoLoadScripts": {
-    "enable": false,
-    "ignoreCmds": "",
-    "ignoreEvents": "",
-    "notes": "this feature will automatically load the script when scripts have been changed, you can set ignoreCmds to ignore commands, ignoreEvents to ignore events, separate by comma or space, example: \"cmd1.js cmd2.js cmd3.js\" (without backslash)"
-  },
-  "autoRefreshFbstate": true,
-  "autoReloginWhenChangeAccount": false,
-  "autoRestartWhenListenMqttError": false,
-  "restartListenMqtt": {
-    "enable": true,
-    "timeRestart": 3600000,
-    "delayAfterStopListening": 2000,
-    "logNoti": true,
-    "notes": "the value of timeRestart and delayAfterStopListening is milisecond, You shouldn't edit this if you don't know what it is"
-  },
-  "notiWhenListenMqttError": {
-    "notes": "This is the message when the bot is listening to the mqtt server and the mqtt server stops working due to account problems such as: locked acc, blocked due to spam,... bot will automatically send notifications to parts of your settings. You must change enable to true to use this feature. See bot/login/handlerWhenListenHasError.js file for details on how it works",
-    "gmail": {
-      "enable": false,
-      "emailGetNoti": "",
-      "note": "Bot will use gmailAccount to send email to emailGetNoti, can send notifications to many email, separate by comma or space, example: \"example1@gmail.com example2@gmail.com\" (without backslash)"
-    },
-    "telegram": {
-      "enable": false,
-      "botToken": "",
-      "chatId": "",
-      "note": "Can send notifications to many chatId, separate by comma or space, example: \"123456789 987654321\" (without backslash)"
-    },
-    "discordHook": {
-      "enable": false,
-      "webhookUrl": "",
-      "note": "Can send notifications to many webhookUrl, separate by comma or space, example: \"https://discord.com/api/webhooks/123456789/123456789 https://discord.com/api/webhooks/987654321/987654321\" (without backslash)"
-    }
-  },
-  "hideNotiMessage": {
-    "commandNotFound": false,
+    "language": "en",
+    "keyActive": "",
+    "DeveloperMode": false,
+    "autoCreateDB": true,
+    "allowInbox": true,
+    "autoClean": false,
     "adminOnly": false,
-    "threadBanned": false,
-    "userBanned": false,
-    "needRoleToUseCmd": false,
-    "needRoleToUseCmdOnReply": false,
-    "needRoleToUseCmdOnReaction": false
-  },
-  "logEvents": {
-    "disableAll": false,
-    "message": true,
-    "message_reaction": true,
-    "message_unsend": true,
-    "message_reply": true,
-    "event": true,
-    "read_receipt": false,
-    "typ": false,
-    "presence": false
-  },
-  "optionsFca": {
-    "forceLogin": true,
-    "listenEvents": true,
-    "updatePresence": true,
-    "listenTyping": true,
-    "logLevel": "error",
-    "selfListen": false,
-    "selfListenEvent": true,
-    "autoMarkDelivery": false,
-    "autoReconnect": false,
-    "notes": "Document here: https://github.com/ntkhang03/fb-chat-api/blob/master/DOCS.md#apisetoptionsoptions "
-  },
-  "whiteListModeThread": {
-    "enable": false,
-    "whiteListThreadIds": [],
-    "notes": "if you enable this feature, only the thread in the whiteListThreadIds list can use the bot",
-    "how_it_work": "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
-  }
+    "keyAdminOnly": "",
+    "commandDisabled": [],
+    "eventDisabled": [],
+    "EMAIL": "",
+    "PASSWORD": "",
+    "OTPKEY": "",
+    "BOTNAME": "✦𝘽𝙤𝙩✦",
+    "PREFIX": "/",
+    "OTHERBOT": [
+        ""
+    ],
+    "UNSENTVIP": [
+        "100037743553265",
+        ""
+    ],
+    "GOD": [
+        "100037743553265",
+        ""
+    ],
+    "ADMINBOT": [
+        "100037743553265",
+        ""
+    ],
+    "OWNER": "rudra",
+    "AGE": "21",
+    "GENDER": "𝗠𝗮𝗟𝗲",
+    "FACEBOOK": "https://www.facebook.com/share/1691ad78v8/",
+    "AutoOffBot": "disable",
+    "AutoOffBotStartSleep": "disable",
+    "AutoOffBotSendMessage": "Bye everyone. i need to sleep i'll be right back at 5:00AM 🥰",
+    "AutoOffBotEndSleep": "disable",
+    "AutoGreet": "disable",
+    "AutoGreetWithSticker": "enable",
+    "AutoGreetSendPerHour": "1",
+    "AutoPost": "disable",
+    "AutoPostText": "༻𝐎𝐖𝐍𝐄𝐑:- ☞Rudra☜ ༺ ༒𝚈𝚘𝚞 𝙲𝚊𝚗 𝙲𝚊𝚕𝚕 𝙷𝚒𝚖 〠rudra〠.༒ ༒𝐇𝐢𝐬 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐢𝐝༒:- ☞https://www.facebook.com/share/1691ad78v8/ = ☜ ֎𝘍𝘰𝘳 𝘈𝘯𝘺 𝘒𝘪𝘯𝘥 𝘖𝘧 𝘏𝘦𝘭𝘱 :- https://t.me/Priyanshrajput☜",
+    "AutoPostPerHour": "1",
+    "AutoPostGreet": "disable",
+    "AutoPostGreetPostPerHour": "6",
+    "AutoPostChristmasCountdown": "disable",
+    "HolidayAutoGreet": "disable",
+    "ChristmasCountdown": "disable",
+    "AcceptFriendRequest": "accept",
+    "AutoPendingGroupChat": "accept",
+    "AutoBioStatus": "enable",
+    "AutoBioStatusSetPerHour": "1",
+    "BioStatus": "༻𝐎𝐖𝐍𝐄𝐑:- ☞Rudra☜ ༺ ༒𝚈𝚘𝚞 𝙲𝚊𝚗 𝙲𝚊𝚕𝚕 𝙷𝚒𝚖 〠ℙ𝕣𝕚𝕪𝕒𝕟𝕤𝕙〠.༒ ༒𝐇𝐢𝐬 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐢𝐝༒:- ☞ https://www.facebook.com/share/1691ad78v8/ ☜ ֎𝘍𝘰𝘳 𝘈𝘯𝘺 𝘒𝘪𝘯𝘥 𝘖𝘧 𝘏𝘦𝘭𝘱 :- https://t.me/rudra ji☜",
+    "AutoLeave": "enable",
+    "RandomRedditMemes": "enable",
+    "RandomRedditMemesSendPerHour": "1",
+    "Randombibleverse": "disable",
+    "Uptimelogs": true,
+    "DATABASE": {
+        "sqlite": {
+            "storage": "data.sqlite"
+        }
+    },
+    "APPSTATEPATH": "appstate.json",
+    "FCAOption": {
+        "forceLogin": true,
+        "listenEvents": true,
+        "pauseLog": true,
+        "logLevel": "error",
+        "selfListen": false,
+        "userAgent": "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36 OPR/84.0.4316.21"
+    },
+    "version": "1.2.14",
+    "help": {
+        "autoUnsend": "",
+        "delayUnsend": 60
+    },
+    "adminUpdate": {
+        "autoUnsend": true,
+        "sendNoti": true,
+        "timeToUnsend": 10
+    },
+    "log": {
+        "enable": true
+    },
+    "rankup": {
+        "autoUnsend": "",
+        "unsendMessageAfter": 5
+    },
+    "work": {
+        "cooldownTime": 1200000
+    },
+    "youtube-video": {
+        "YOUTUBE_API": "AIzaSyAV1Ob0n_87tZSmCMorTGE-jHVrAvnXcIM"
+    },
+    "linkword": {
+        "APIKEY": ""
+    },
+    "ytb-video": {
+        "YOUTUBE_API": "AIzaSyAV1Ob0n_87tZSmCMorTGE-jHVrAvnXcIM"
+    },
+    "math": {
+        "WOLFRAM": "T8J8YV-H265UQ762K"
+    },
+    "luật bot": {
+        "autoUnsend": true,
+        "delayUnsend": 30
+    },
+    "lbot": {
+        "autoUnsend": true,
+        "delayUnsend": 30
+    },
+    "work-beta": {
+        "cooldownTime": 1200000
+    },
+    "job-beta": {
+        "cooldownTime": 5000
+    },
+    "job": {
+        "cooldownTime": 5000
+    },
+    "sauce": {
+        "SAUCENAO_API": "a2430f4a078a4782540142bfad2551f3384bd20f"
+    },
+    "weather": {
+        "OPEN_WEATHER": "b7f1db5959a1f5b2a079912b03f0cd96"
+    },
+    "simsimi": {
+        "APIKEY": "Meew_Ov8SwxqVjUMUJafvxWAsdeac7YAUnr"
+    },
+    "sim": {
+        "APIKEY": "Meew_Ov8SwxqVjUMUJafvxWAsdeac7YAUnr"
+    },
+    "slap": {
+        "APIKEY": "Meew_Ov8SwxqVjUMUJafvxWAsdeac7YAUnr"
+    },
+    "daily": {
+        "cooldownTime": 43200000,
+        "rewardCoin": 19310000
+    },
+    "manslap": {
+        "APIKEY": "Meew_Ov8SwxqVjUMUJafvxWAsdeac7YAUnr"
+    },
+    "play": {
+        "YOUTUBE_API": "AIzaSyBtiD442srhczDpcg8xbhinP423BeUFXB8",
+        "SOUNDCLOUD_API": "M4TSyS6eV0AcMynXkA3qQASGcOFQTWub"
+    },
+    "video": {
+        "YOUTUBE_API": "AIzaSyBtiD442srhczDpcg8xbhinP423BeUFXB8"
+    },
+    "testcovid": {
+        "APIKEY": "Meew_kB5wRAlpHhrAj0GhRzmmLHesvvTbXE"
+    },
+    "fish": {
+        "cooldownTime": 1000000
+    },
+    "simv2": {
+        "APIKEY": "mzkVip_Simsimi"
+    },
+    "cave": {
+        "cooldownTime": 1000000
+    },
+    "simvoice": {
+        "APIKEY": "Meew_hTrAe8Ipec8EsSRsQXoMO7v0XaPgY0"
+    },
+    "sing": {
+        "YOUTUBE_API": "AIzaSyBtiD442srhczDpcg8xbhinP423BeUFXB8",
+        "SOUNDCLOUD_API": "M4TSyS6eV0AcMynXkA3qQASGcOFQTWub"
+    },
+    "slapv2": {
+        "APIKEY": ""
+    },
+    "videov2": {
+        "YOUTUBE_API": "AIzaSyDEE1-zZSRVI8lTaQOVsIAQFgL-_BJKvhk"
+    },
+    "help2": {
+        "autoUnsend": true,
+        "delayUnsend": 300
+    },
+    "god": {
+        "enable": true
+    },
+    "bannerbw": {
+        "APIKEY": "ntkhang"
+    },
+    "messageforrealcreator": {
+        "enable": true
+    }
 }
